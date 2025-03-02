@@ -1,0 +1,43 @@
+{
+  "name": "repo-name",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.5.2+sha512.da9dc28cd3ff40d0592188235ab25d3202add8a207afbedc682220e4a0029ffbff4562102b9e6e46b4e3f9e8bd53e6d05de48544b0c57d4b0179e22c76d1199b",
+  "description": "_description_",
+  "author": "IkumaTadokoro <tadokorodev@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/antfu/repo-name#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antfu/repo-name.git"
+  },
+  "bugs": {
+    "url": "https://github.com/antfu/repo-name/issues"
+  },
+  "keywords": [],
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "start": "tsx src/index.ts",
+    "test": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.3.0",
+    "@types/node": "^22.13.8",
+    "eslint": "^9.21.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "unbuild": "^3.5.0",
+    "vitest": "^3.0.7"
+  }
+}
