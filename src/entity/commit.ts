@@ -1,5 +1,5 @@
-import type { Tree } from '.'
-import { timestamp } from './util'
+import type { Tree } from './tree'
+import { timestamp } from '../util'
 
 interface Author {
   name: string
