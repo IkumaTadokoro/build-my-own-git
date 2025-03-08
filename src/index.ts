@@ -3,9 +3,10 @@ import { createHash } from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { cwd, env, exit, stdin, stdout } from 'node:process'
-import { getSystemErrorName, parseArgs, types } from 'node:util'
+import { getSystemErrorName, parseArgs } from 'node:util'
 import { deflateSync } from 'node:zlib'
 import { Commit } from './commit'
+import { isNodeError } from './util'
 
 export async function main(): Promise<void> {
   const { positionals } = parseArgs({ allowPositionals: true })
@@ -210,10 +211,6 @@ class Database {
       return this.TEMP_CHARS[index]
     }).join('')
   }
-}
-
-function isNodeError(error: unknown): error is NodeJS.ErrnoException {
-  return types.isNativeError(error)
 }
 
 (async () => {
