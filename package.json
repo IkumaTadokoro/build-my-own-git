@@ -25,6 +25,11 @@
     "dist"
   ],
   "scripts": {
+    "dev:init": "pnpm start init",
+    "dev:commit": "echo 'chore: my commit message' | pnpm start commit",
+    "util:reset": "rm -rf playground/.git",
+    "util:tree": "tre -a  playground/.git",
+    "util:head": "cat playground/.git/HEAD",
     "build": "unbuild",
     "start": "tsx src/index.ts",
     "test": "vitest",

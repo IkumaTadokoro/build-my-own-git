@@ -2,9 +2,10 @@ import { Buffer } from 'node:buffer'
 import { createHash } from 'node:crypto'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { cwd, exit } from 'node:process'
+import { cwd, env, exit, stdin, stdout } from 'node:process'
 import { getSystemErrorName, parseArgs, types } from 'node:util'
 import { deflateSync } from 'node:zlib'
+import { Commit } from './commit'
 
 export async function main(): Promise<void> {
   const { positionals } = parseArgs({ allowPositionals: true })
@@ -56,6 +57,32 @@ async function commit(): Promise<void> {
   }
   const tree = new Tree(entries)
   database.store(tree)
+
+  const name = env.GIT_AUTHOR_NAME ?? 'unknown'
+  const email = env.GIT_AUTHOR_EMAIL ?? ''
+  const message = await readStdin()
+  const commit = new Commit(tree.oid, { name, email }, message)
+
+  await database.store(commit)
+
+  const headPath = path.join(gitPath, 'HEAD')
+  const headHandle = await fs.open(headPath, 'w+')
+  await headHandle.write(`${commit.oid}\n`)
+  await headHandle.close()
+
+  stdout.write(`[(root-commit) ${commit.oid}] ${message.split('\n')[0]}\n`)
+  exit(0)
+}
+
+async function readStdin(): Promise<string> {
+  const message: string[] = []
+  for await (const line of stdin) {
+    if (line === '.') {
+      break
+    }
+    message.push(line)
+  }
+  return message.join('\n')
 }
 
 // working treeに対して責務を持つクラス
@@ -80,7 +107,7 @@ interface Entry {
   oid: string
 }
 
-class Tree {
+export class Tree {
   private ENTRY_FORMAT = 'Z*H40'
   private MODE = '100644'
 
@@ -141,7 +168,7 @@ class Database {
 
   constructor(private readonly pathname: string) {}
 
-  async store(blob: Blob | Tree): Promise<void> {
+  async store(blob: Blob | Tree | Commit): Promise<void> {
     const raw = blob.toString()
     const buffer = Buffer.from(raw, 'ascii')
     const content = `${blob.type} ${raw.length}\0${buffer}` as const
