@@ -7,7 +7,7 @@ import { Commit } from '../entity/commit'
 import { Database } from '../entity/database'
 import { Tree } from '../entity/tree'
 import { Workspace } from '../entity/workspace'
-import { readStdin } from '../util'
+import { read } from '../util/stdin'
 
 export async function commit(): Promise<void> {
   const rootPath = path.resolve(cwd(), 'playground')
@@ -30,7 +30,7 @@ export async function commit(): Promise<void> {
 
   const name = env.GIT_AUTHOR_NAME ?? 'unknown'
   const email = env.GIT_AUTHOR_EMAIL ?? ''
-  const message = await readStdin()
+  const message = await read()
   const commit = new Commit(tree.oid, { name, email }, message)
 
   await database.store(commit)

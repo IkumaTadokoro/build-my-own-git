@@ -7,7 +7,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { getSystemErrorName } from 'node:util'
 import { deflateSync } from 'node:zlib'
-import { isNodeError } from '../util'
+import { isNodeError } from '../util/error'
 
 export class Database {
   private readonly TEMP_CHARS = [
