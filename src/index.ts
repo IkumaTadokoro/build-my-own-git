@@ -1,6 +1,6 @@
 import { cwd } from 'node:process'
 import { parseArgs } from 'node:util'
-import { commit } from './command/commit'
+import { commit } from './command/commit2'
 import { init } from './command/init'
 
 export async function main(): Promise<void> {

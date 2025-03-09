@@ -1,5 +1,4 @@
 import type { Entry } from '../entity/entry'
-import fs from 'node:fs/promises'
 import path from 'node:path'
 import { cwd, env, exit, stdout } from 'node:process'
 import { Blob } from '../entity/blob'
@@ -7,6 +6,8 @@ import { Commit } from '../entity/commit'
 import { Database } from '../entity/database'
 import { Tree } from '../entity/tree'
 import { Workspace } from '../entity/workspace'
+import { toBuffer } from '../util/buffer'
+import { create } from '../util/file'
 import { read } from '../util/stdin'
 
 export async function commit(): Promise<void> {
@@ -35,10 +36,7 @@ export async function commit(): Promise<void> {
 
   await database.store(commit)
 
-  const headPath = path.join(gitPath, 'HEAD')
-  const headHandle = await fs.open(headPath, 'w+')
-  await headHandle.write(`${commit.oid}\n`)
-  await headHandle.close()
+  await create({ dir: gitPath, filePath: path.join(gitPath, 'HEAD'), content: toBuffer(`${commit.oid}\n`) })
 
   stdout.write(`[(root-commit) ${commit.oid}] ${message.split('\n')[0]}\n`)
   exit(0)
