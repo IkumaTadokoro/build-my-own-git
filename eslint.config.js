@@ -5,4 +5,9 @@ export default antfu(
   {
     type: 'lib',
   },
+  {
+    rules: {
+      '@typescript-eslint/no-redeclare': 'off',
+    },
+  },
 )
